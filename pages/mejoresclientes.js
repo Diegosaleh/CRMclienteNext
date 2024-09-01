@@ -3,27 +3,26 @@ import Layout from '@/components/Layout'
 import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { gql, useQuery } from '@apollo/client';
 
-const MEJORES_VENDEDORES = gql`
+const MEJORES_CLIENTES = gql`
 
-    query mejoresVendedores {
-        mejoresVendedores {
-            vendedor {
+    query mejoresClientes {
+        mejoresClientes {
+            cliente {
                 nombre
-                email
+                empresa
             }
             total
         }
     }
-
 `
 
 
-const MejoresVendedores = () => {
+const MejoresClientes = () => {
 
-    const { data, loading, error, startPolling, stopPolling } = useQuery(MEJORES_VENDEDORES);
+    const { data, loading, error, startPolling, stopPolling } = useQuery(MEJORES_CLIENTES);
 
     useEffect(() => {
-        startPolling(10000);
+        startPolling(1000);
         return () => {
             stopPolling();
         }
@@ -35,22 +34,23 @@ const MejoresVendedores = () => {
     console.log(data)
 
 
-    const { mejoresVendedores } = data;
+    const { mejoresClientes } = data;
     
-    const vendedorGrafica = [];
+    const clienteGrafica = [];
 
-    console.log(vendedorGrafica);
+    console.log(clienteGrafica);
 
-    mejoresVendedores.map((vendedor, index) => { 
+    mejoresClientes.map((cliente, index) => { 
 
-        vendedorGrafica[index] = { ...vendedor.vendedor[0], total: vendedor.total }
+        clienteGrafica[index] = { ...cliente.cliente[0],
+            total: cliente.total 
+        }
     })
-
 
 
     return (
         <Layout>
-            <h1 className='text-2xl text-gray-800 font-light'>Mejores Vendedores</h1>
+            <h1 className='text-2xl text-gray-800 font-light'>Mejores Clientes</h1>
 
             <ResponsiveContainer
                 width={'99%'}
@@ -61,7 +61,7 @@ const MejoresVendedores = () => {
                     className='mt-10'
                     width={600}
                     height={500}
-                    data={vendedorGrafica}
+                    data={clienteGrafica}
                     margin={{
                         top: 5,
                         right: 30,
@@ -84,4 +84,4 @@ const MejoresVendedores = () => {
     )
 }
 
-export default MejoresVendedores;
+export default MejoresClientes;
